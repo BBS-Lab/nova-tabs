@@ -16,8 +16,8 @@ class TabsServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Nova::serving(function (ServingNova $event): void {
-            Nova::script('tabs', __DIR__.'/../dist/js/field.js');
-            Nova::style('tabs', __DIR__.'/../dist/css/field.css');
+            Nova::script('nova-tabs', __DIR__.'/../dist/js/field.js');
+            Nova::style('nova-tabs', __DIR__.'/../dist/css/field.css');
         });
     }
 

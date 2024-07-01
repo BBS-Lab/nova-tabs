@@ -1,35 +1,19 @@
 import { mapProps } from 'laravel-nova';
 import { parseLocationHash, updateLocationHash } from "../utils/hash";
 import orderBy from 'lodash/orderBy';
-import unset from 'lodash/unset';
-import { uid } from 'uid/single';
 
 export default {
 
   props: {
-    panel: {
-      type: Object,
-      required: true,
-    },
-    name: {
-      default: 'Panel',
-    },
-    fields: {
-      type: Array,
-      default: [],
-    },
-    formUniqueId: {
-      type: String,
-      required: false
-    },
-    validationErrors: {
-      type: Object,
-      required: false,
-    },
-    
+    panel: { type: Object, required: true},
+    name: { default: 'Panel' },
+    fields: { type: Array, default: [] },
+    formUniqueId: { type: String, required: false },
+    validationErrors: { type: Object, required: false },
     ...mapProps([
-      'shownViaNewRelationModal',
       'mode',
+      'shownViaNewRelationModal',
+      'showHelpText',
       'resourceName',
       'resourceId',
       'relatedResourceName',
@@ -105,7 +89,7 @@ export default {
             this.locationHash = null;
           }
         }, { once: true });
-      
+
       Nova.store.tabsListenerRegistered = true;
     }
 
@@ -113,14 +97,19 @@ export default {
       this.$watch('validationErrors', (newErrors) => {
         if (newErrors.errors) {
           Object.entries(newErrors.errors).forEach(error => {
-            if (error[0] && this.fields.find(x => x.attribute === error[0])) {
-              let field = this.getNestedObject(this.fields, 'attribute', error[0]);
-              let slug = this.getNestedObject(this.fields, 'attribute', error[0]).tabSlug + '-tab';
-              let addClasses = ['tabs-text-' + this.getErrorColor() + '-500', 'tabs-border-b-2', 'tabs-border-b-' + this.getErrorColor() + '-500', 'tab-has-error']
-              let removeClasses = ['tabs-text-gray-600', 'hover:tabs-text-gray-800', 'dark:tabs-text-gray-400', 'hover:dark:tabs-text-gray-200']
-              this.$refs[slug][0].classList.add(...addClasses)
-              this.$refs[slug][0].classList.remove(...removeClasses)
+            const attribute = error[0]
+            const field = this.fields.find(x => x.attribute === attribute)
+
+            if (!field) {
+              return
             }
+
+            const slug = `${field.tabSlug}-tab`
+            let addClasses = ['tabs-text-' + this.getErrorColor() + '-500', 'tabs-border-b-2', 'tabs-border-b-' + this.getErrorColor() + '-500', 'tab-has-error']
+            let removeClasses = ['tabs-text-gray-600', 'hover:tabs-text-gray-800', 'dark:tabs-text-gray-400', 'hover:dark:tabs-text-gray-200']
+
+            this.$refs[slug][0].classList.add(...addClasses)
+            this.$refs[slug][0].classList.remove(...removeClasses)
           });
         }
       })
