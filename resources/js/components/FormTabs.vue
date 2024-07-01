@@ -55,8 +55,9 @@
             <component
               v-for="(field, index) in tab.fields"
               :index="index"
-              :key="index"
+              :key="`tab-${index}`"
               :is="`form-${field.component}`"
+              ref="fields"
               :errors="validationErrors"
               :resource-id="resourceId"
               :resource-name="resourceName"
@@ -89,24 +90,6 @@ import {BehavesAsPanel, HasTabs, HandlesPanelVisibility} from "../mixins";
 
 export default {
   mixins: [BehavesAsPanel, HasTabs, HandlesPanelVisibility],
-
-  props: {
-    shownViaNewRelationModal: { type: Boolean, default: false },
-    showHelpText: { type: Boolean, default: false },
-    panel: { type: Object, required: true },
-    name: { default: 'Panel' },
-    dusk: { type: String },
-    fields: { type: Array, default: [] },
-    formUniqueId: { type: String },
-    validationErrors: { type: Object, required: true },
-    resourceName: { type: String, required: true },
-    resourceId: { type: [Number, String] },
-    relatedResourceName: { type: String },
-    relatedResourceId: { type: [Number, String] },
-    viaResource: { type: String },
-    viaResourceId: { type: [Number, String] },
-    viaRelationship: { type: String },
-  },
 
   data: () => ({
     tabMode: 'form',
